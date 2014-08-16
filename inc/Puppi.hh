@@ -11,6 +11,11 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
+#include <memory>
+
+#include "HistTool.hh"
+#include "JetInfo.hh"
+#include "JetPerformance.hh"
 
 // Header file for the classes stored in the TTree if any.
 
@@ -185,7 +190,7 @@ public :
    TBranch        *b_CHS2GeVmclean;   //!
    TBranch        *b_CHS2GeVmconst;   //!
 
-   Puppi(TTree *tree=0);
+   Puppi(TTree *tree, std::shared_ptr<TFile> outfile_);
    virtual ~Puppi();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
@@ -194,12 +199,21 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+   bool PreLoop();
+   bool PostLoop();
+
+
+private:
+    std::shared_ptr<TFile> outfile;
+    HistTool* hist;
+    JetPerformance* PFPerf;
+    JetPerformance* CHSPerf;
 };
 
 #endif
 
 #ifdef Puppi_cxx
-Puppi::Puppi(TTree *tree) : fChain(0) 
+Puppi::Puppi(TTree *tree, std::shared_ptr<TFile> outfile_) : fChain(0) , outfile(outfile_)
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
@@ -212,6 +226,9 @@ Puppi::Puppi(TTree *tree) : fChain(0)
 
    }
    Init(tree);
+   hist = new HistTool(outfile, "");
+   PFPerf = new JetPerformance(outfile, "PF", "pt");
+   CHSPerf = new JetPerformance(outfile, "CHS", "pt");
 }
 
 Puppi::~Puppi()

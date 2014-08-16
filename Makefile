@@ -36,12 +36,13 @@ ifeq ($(shell echo $(BOOSTROOT)), '')
 endif
 
 
-OBJ        = Main.o Puppi.o
-PROGRAM    = collar
+OBJ        = runCollar.o Puppi.o HistTool.o JetPerformance.o
+PROGRAM    = runCollar
 
 OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
-all:            $(PROGRAM)
+all:          $(PROGRAM)
+
 
 $(ODIR)/%.o : $(SDIR)/%.C $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
@@ -49,10 +50,8 @@ $(ODIR)/%.o : $(SDIR)/%.C $(HEADERS)
 $(ODIR)/%.o : $(SDIR)/%.cc $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
 
-$(ODIR)/%  :  $(SDIR)/%.cc $(HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
 
-$(PROGRAM):     $(OBJS)
+$(PROGRAM):  $(OBJS)
 	@echo "Linking $(PROGRAM) ..."
 	@$(LD) $(OBJS) $(LIBS) -o $(PROGRAM)
 	@echo "done"
