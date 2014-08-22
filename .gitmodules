@@ -1,3 +1,6 @@
 [submodule "Delphes"]
 	path = Delphes
 	url = https://github.com/sethzenz/Delphes.git
+[submodule "JetMETObjects"]
+	path = JetMETObjects
+	url = git@github.com:zhenbinwu/JetMETObjects.git
